@@ -1,4 +1,31 @@
 {
   "name": "md-links",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "description": "[Markdown](https://es.wikipedia.org/wiki/Markdown) es un lenguaje de marcado\r ligero muy popular entre developers. Es usado en muchísimas plataformas que\r manejan texto plano (GitHub, foros, blogs, ...), y es muy común\r encontrar varios archivos en ese formato en cualquier tipo de repositorio\r (empezando por el tradicional `README.md`).",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "eslint": "eslint --ext .js src/ test/",
+    "prestest": "npm run eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabagonzalez/SCL009-md-links.git"
+  },
+  "keywords": [
+    "test",
+    "markdown",
+    "links"
+  ],
+  "author": "Gabriela Gonzalez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabagonzalez/SCL009-md-links/issues"
+  },
+  "homepage": "https://github.com/gabagonzalez/SCL009-md-links#readme",
+  "dependencies": {
+    "eslint": "^5.16.0",
+    "eslint-plugin-jest": "^22.6.4",
+    "jest": "^24.8.0"
+  }
 }
