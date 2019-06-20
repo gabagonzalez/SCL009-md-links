@@ -19,10 +19,24 @@
 // });
 
 //example vuelve lineas de text
-let fs = require('fs');
-let numberLines = 
-fs.readFileSync(process.argv[2],'utf8')
-.split('\n')
-.length -1;
+// let fs = require('fs');
+// let numberLines = 
+// fs.readFileSync(process.argv[2],'utf8')
+// .split('\n')
+// .length -1;
 
-console.log(numberLines);
+// console.log(numberLines);
+
+readingFile ((mdFile) => {
+    return new Promise((resolve, reject) =>{
+        fs.readFile(mdFile, "utf-8", (err, data) => {
+            if (err){
+                reject(err);
+            }else{
+                resolve(data);
+            }
+    });
+
+  });
+ 
+})
