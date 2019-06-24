@@ -8,7 +8,8 @@ const marked = require("marked");
 
 //Si no es archivo .md se arroje error, sino que lea funcion callback que sino da error extraiga links
 let mdPath = process.argv[2];
-const links = (path)=>{
+module.exports = {
+ links: (path)=>{
   return new Promise((resolve,reject)=>{
       try{
         
@@ -40,9 +41,10 @@ const links = (path)=>{
           reject(error);
       }        
   })
+  console.log(links);
  }
- console.log(links);
-
+ 
+}
  // if(mdPath.includes(".")) {
 //   fs.readFile(mdPath, 'utf-8', function(err, data) {
 //     if(err) {

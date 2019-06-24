@@ -7,7 +7,7 @@ const log = console.log;
 const mdLinks = require('./src/md-links.js');
 mdLinks.saludar();
 log(chalk.bold.bgMagenta(mdLinks.welcome));
-    
+// mdLinks.links();
 
 
 
