@@ -1,18 +1,26 @@
-//A-Declaraciones, Modulos, librerias
+//Declaraciones, Modulos, librerias
 const fs = require('fs');
+const path = require('path');
+const fileHound = require('filehound');
 const marked = require("marked");
 
+//-Declaro mi route
+let route = process.argv[2];
+route = path.resolve(route);
+route= path.normalize(route);
+console.log(route); // console muestra la ruta
+
 //Si no es archivo .md se arroje error, sino que lea funcion callback que sino da error extraiga links
-let mdPath = process.argv[2];
+
 module.exports = {
- links: (path)=>{
+ mdLinks: (path) => {
   return new Promise((resolve,reject)=>{
       try{
         
-          if(mdPath.includes(".md")) {
+          if(route.includes(".md")) {
               throw (new Error("no es arhivo md"));
           }
-          fs.readFile(mdPath, 'utf-8', function(err, data) {
+          fs.readFile(route, 'utf-8', function(err, data) {
             
               if(err){
                   reject(err.code);
@@ -41,21 +49,4 @@ module.exports = {
  }
  
 }
-console.log(links("./prueba.md"));
-//otros
-//-Example creando archivoJson TemplateString
-
-// const processArgv = process.argv[0];
-// console.log(processArgv[2]);
-// const fs = require ('fs');
-// const os = require('os');
-// let cpu = os.cpus();
-// // let system = os.platform();
-// // let user = os.hostname();
-
-// let cpu_string = JSON.stringify(cpu);
-// fs.appendFile('prueba.txt',`\n Informacion del cpu: ${cpu_string} `, function(error) {
-// if(error) {
-//     console.log('Error al crear archivo');
-// }
-// });
+console.log(links("./prueba.md"))

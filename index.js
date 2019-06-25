@@ -57,11 +57,11 @@ let links = (path => {
   })
 })
 
-//Example export e import con bb
-// let welcome = 'Hola Mundo';
-// module.exports = {
-//   welcome: welcome,
-//   saludar: () => {
-//     log(chalk.bold.underline.bgBlack('Bienvenidos'));
-//   }
-// };
+Example export e import con bb
+let welcome = 'Hola Mundo';
+module.exports = {
+  welcome: welcome,
+  saludar: () => {
+    log(chalk.bold.underline.bgBlack('Bienvenidos'));
+  }
+};
