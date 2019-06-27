@@ -1,9 +1,9 @@
+#!/usr/bin/env node
 
 //Declaraciones
 const chalk = require('chalk');
-const log = console.log;
-const mdLinks = require('../index.js');
+let log = console.log;
 
+let mdLinks = require(route);
 mdLinks.saludar();
-log(chalk.bold.bgMagenta(mdLinks.welcome));
-// mdLinks.read ();
+log(chalk.bold.bgMagenta(mdLinks.welcome))
