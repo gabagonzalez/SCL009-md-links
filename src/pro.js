@@ -45,7 +45,7 @@ let getLinks = (path) => {
 //Llamado de la Promise
   getLinks(route)
   .then(res=> {
-    console.log("el resultado es", res);
+    console.log("el resultado array es", res);
   })
   .catch(err=> {
     console.log("err catch", err);
