@@ -1,4 +1,7 @@
-#!/usr/bin/env node// "strict use"
+#!/usr/bin/env node
+
+
+// "strict use"
 
 //-Declaraciones, Modulos/librerías
 const fs = require('fs');
@@ -126,23 +129,16 @@ let getLinks = (path) => {
     })
 }
 
-//Llamado de la Promise
-getLinks(route)
-.then(res=> {
-  log("el resultado es :", res);
-})
-.catch(err=> {
-  log("Err catch :", err);
-})
+// //Llamado de la Promise
+// getLinks(route)
+// .then(res=> {
+//   log("el resultado es :", res);
+// })
+// .catch(err=> {
+//   log("Err catch :", err);
+// })
 
 // //0-example export e import con bb
-// module.exports = {
-//    getLinks:getLinks,
-//    saludar: () => {
-//     log(chalk.bold.underline.bgBlack(welcome));
-//   }
-
-// }  
 
 // let welcome = 'Hola Mundo';
 
@@ -155,3 +151,13 @@ getLinks(route)
 //module.exports = () => {
 //  // ...
 //};
+
+// getLinks(route)
+// .then(res=> {
+//   log( res);
+// })
+// .catch(err=> {
+//   log("Err catch :", err);
+// })
+
+module.exports = getLinks()

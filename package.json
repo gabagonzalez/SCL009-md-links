@@ -19,6 +19,9 @@
   ],
   "author": "Gabriela Gonzalez",
   "license": "ISC",
+  "bin": {
+    "md-links": "index.js"
+  },
   "bugs": {
     "url": "https://github.com/gabagonzalez/SCL009-md-links/issues"
   },
