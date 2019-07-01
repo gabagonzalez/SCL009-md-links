@@ -21,12 +21,15 @@ algunas estadísticas.
 
 ### **GG-Md-links**
 ----
-Extrae los links de tus directorios y/o archivos markdown (.md), valida su status y obten algunos datos estadísticos.
+Extrae los links de tus directorios y/o archivos markdown (.md).
+Validará status y obtendrá algunos datos estadísticos.(En Desarrollo).
 
 ### **Instalación**
 ----
 
-npm install gg-md-links
+npm install gg-md-links(En desarrollo).
+
+Este módulo incluye un ejecutable que podamos invocar en la línea de comando como una interfaz que podamos importar con require para usarlo.
 
 ### **Guía de uso**
 ---
