@@ -45,15 +45,23 @@ md-links <path-to-file>
 
 
 $ md-links ./example.md
+
 ./example.md http://algo.com/2/3/ Link a algo
+
 ./example.md https://otra-cosa.net/algun-doc.html algún doc
 
+
+---
 - Lectura de un directorio
 md-links <path-to-directory>
 
 $ md-links ./some/example.md
+
 ./some/example.md http://algo.com/2/3/ Link a algo
+
 ./some/example.md https://otra-cosa.net/algun-doc.html algún doc
+
+
 
 ---
 
