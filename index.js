@@ -1,18 +1,20 @@
-#!/usr/bin/env node // "strict use"
+#!/usr/bin/env node 
+// "strict use"
 
-//1-Declaration Modules/libraries
-const fs = require('fs');
-const path = require('path');
-// const fileHound = require('filehound');
-// const marked = require("marked");
-const chalk = require('chalk');
-// const fetch = require('node-fetch');
+//1***Declaration Modules/libraries/Constante
+// const chalk = require('chalk');
+const mdLinks = require('../SCL009-md-links/md-links.js'); // Importando funcion mdLinks desde md-links.js
 
-//2-Declaraton of the Variables
-let log = console.log;
-
-//3-Declaration of the Route
+//2***Declaration of the Variables
 let route = process.argv[2];
-route = path.resolve(route);
-route= path.normalize(route);
+let options = process.argv[3];
+let validate = false;
+let stats = false;
+
+// los dos valores ingresados en consola seran los parametros de la funcion importada
+executeModuleMdLinks = (route, options) =>{
+    mdLinks.mdLinks(route,options);
+        
+}
+executeModuleMdLinks(route, options)
 

@@ -6,7 +6,4 @@
 
 - [learnyounode](https://github.com/workshopper/learnyounode)
 
-### Otros recursos
-
-- [Acerca de Node.js - Documentación oficial](https://nodejs.org/es/about/)
-
+- [promise-it-wont-hurt](https://github.com/stevekane/promise-it-wont-hurt)
