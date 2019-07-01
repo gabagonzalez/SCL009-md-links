@@ -1,27 +1,17 @@
 // #!/usr/bin/env node 
 
-//1***Declaration Modules/libraries
+//A-Declaration Modules/libraries
 const fs = require('fs');
 const path = require('path');
 const fileHound = require('filehound');
 const marked = require("marked");
 const fetch = require("fetch");
+const chalk = require('chalk');
 
-//2***Declaraton of the Variables
+//B-Declaraton of the Variables
 let mdLinks = {};// *** 0 ***
 
-//3 ***Funcion para convertir la ruta a Absoluta **Normalizar y resolver *** 
- mdLinks.pathConvertAbsolute = (route) => {
-  // primero
- let pathResolve = path.resolve(route);
-  // segundo 
- let pathConvertAbsolute = path.normalize(pathResolve);
-  // ** 
-  // console.log( "pathConvertAbsolute es :" + pathConvertAbsolute);
-return pathConvertAbsolute;
-}
- 
-//A-MODULO IMPORTADO EN INDEX.JS  
+//C-MODULE IMPORT TO INDEX.JS:
 mdLinks.mdLinks = (route,options) => {
   if(options === '--validate'){ 
     let options = {};
@@ -29,51 +19,19 @@ mdLinks.mdLinks = (route,options) => {
   }
  
   let pathExecute =  mdLinks.pathConvertAbsolute(route);
-    // console.log("option ingresada es :" + optionInConsole);
-
-  // secuencia Declaration of the Route
-  
- 
-//  console.log("Ruta Absoluta----" + pathExecute);
-
-mdLinks.callFileOrDirectory(pathExecute);
+  mdLinks.callFileOrDirectory(pathExecute);
 
 }
 
-// FUNCIONES PARA CONECTAR 
-//1- funcion para clasificar en  ** archivo **  o ** directorio ** //1erPROMESA metodo fs.stat
-mdLinks.promiseFileOrDirectory = (route) => {
-    //console.log("dentro de pathFileOrDirectory :" + route);
-   return new Promise ((resolve, reject) => {
-       fs.stat(route, (err, salida) => {
-           if(err) {
-               reject(err);
-           } else {
-                resolve(salida);
-           }
-       })
-    })
-}
+//***FUNCTION FOR CONECT***
+//1-Function from relative a absolute with Module Path: **Normalizar y resolver *** 
+mdLinks.pathConvertAbsolute = (route) => {
+  let pathResolve = path.resolve(route); //first
+  let pathConvertAbsolute = path.normalize(pathResolve);//second
+   return pathConvertAbsolute;
+ }
 
-//2-funcion Call PromiseFileOrDirectory
-mdLinks.callFileOrDirectory = (route) => {
-    mdLinks.promiseFileOrDirectory(route)
-    .then( salida =>   {
-      let fileOrDirectory = mdLinks.isFileOrDirectory(salida);
-      if(fileOrDirectory==='directory'){
-        mdLinks.getFromDirectory(route)
-        // console.log("siii es directory");
-   
-      }else if (fileOrDirectory==='file') {
-        mdLinks.callGetLinks(route)
-        // console.log("sii es file");
-        }
-      
-    })
-    .catch( err => { console.log(err); } )
-}
-
-// 3-funcion uso de funciones " isFile() "  y " isDirectory() "
+// 2-Function Conditional " isFile() " or " isDirectory() " : se incluye in CallFileOrDirectory.
 mdLinks.isFileOrDirectory = (element) => {
     // entrega booleano true
     if( element.isFile()){
@@ -85,7 +43,40 @@ mdLinks.isFileOrDirectory = (element) => {
     }
 }
 
-//4-Declaring Promise mdGetFromDirectory: Read the directory to extract the "md" files
+//***DECLARING PROMISES
+//1a-Declaring Promise PromiseFileOrDirectory with Module FileSystem-Stat: return info. of a file.
+mdLinks.promiseFileOrDirectory = (route) => {
+
+ return new Promise ((resolve, reject) => {
+     fs.stat(route, (err, salida) => {
+         if(err) {
+             reject(err);
+         } else {
+              resolve(salida);
+         }
+     })
+  })
+}
+
+//1b-Call PromiseFileOrDirectory: run the route to the next action.
+mdLinks.callFileOrDirectory = (route) => {
+  mdLinks.promiseFileOrDirectory(route)
+  .then( salida =>   {
+    let fileOrDirectory = mdLinks.isFileOrDirectory(salida);
+    if(fileOrDirectory==='directory'){
+      mdLinks.getFromDirectory(route)
+      // console.log("siii es directory");
+ 
+    }else if (fileOrDirectory==='file') {
+      mdLinks.callGetLinks(route)
+      // console.log("sii es file");
+      }
+    
+  })
+  .catch( err => { console.log(err); } )
+}
+
+//2-Declaring Promise getFromDirectory with FileHound/Promise All: Read the directory to extract the "md" files
 mdLinks.getFromDirectory = (route) => {
   return new Promise((resolve,reject)=>{
     fs.readdir(route, 'utf-8', function(err, files) {
@@ -114,10 +105,9 @@ mdLinks.getFromDirectory = (route) => {
   })
 }
 
-
-// 5-Declaring Promise GetLinks: Read file to extract liks.
+// 3a-Declaring Promise GetLinks with Module Marked: Read file to extract liks.
 mdLinks.getLinks = (route) => {
-  // console.log("en getLinks es  : " + route);
+ 
 return new Promise((resolve,reject)=>{
     fs.readFile(route, 'utf-8', function(err, data) {   
         if(err) {
@@ -137,14 +127,13 @@ return new Promise((resolve,reject)=>{
             }
             marked(data,{renderer:renderer});
             resolve(links);
-            // let linkString = JSON.stringify(links);
-            // console.log("links :" + linkString);
-        }
+
+          }
     })  
 })
 }
 
-// Promise Call getLinks
+//3b-Call Promise getLinks.
 mdLinks.callGetLinks= (route)=> {
     mdLinks.getLinks(route)
     .then(res=> {
@@ -157,10 +146,10 @@ mdLinks.callGetLinks= (route)=> {
   })
 }
 
-// // Funcion Con fetch
+//4-Declaring Promise ArrayHref with Module Fetch: se incluye in CallGetLinks.
 mdLinks.arrayHref = (array) => {
 
-array.forEach(element => {
+  array.forEach(element => {
   return new Promise((resolve,reject)=> {
     fetch.fetchUrl(element.href,(error, meta, body)=> {
         if(meta) {
@@ -171,13 +160,14 @@ array.forEach(element => {
     })
 })  
     .then((res) => {
-      // console.log("aqui  " +JSON.stringify(element.route));
-    console.log( element.route+ "   "+element.href +"   "+ element.text +res);
+     console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
     })
     .catch(err => {
     console.log(err);
     })  
 });
 }
+
+
 module.exports= mdLinks;
-// console.log("mdlinks es" + mdLinks);
+
