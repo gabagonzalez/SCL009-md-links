@@ -13,7 +13,11 @@ let mdLinks = {};// *** 0 ***
 
 //C-MODULE IMPORT TO INDEX.JS:
 mdLinks.mdLinks = (route,options) => {
-  if(options === '--validate'){ 
+  if(options === '--validate' || options ==='--validate --stats'){ 
+    let options = {};
+    return options.validate = true;
+  }
+  else if(options==='--stats' || options ==='--stats --validate '){ 
     let options = {};
     return options.validate = true;
   }
@@ -140,6 +144,7 @@ mdLinks.callGetLinks= (route)=> {
       // let linkString = JSON.stringify(res);
       // console.log(linkString);
       mdLinks.arrayHref(res);
+      // mdLinks.arrayValidate(res);
      })
   .catch(err=> {
     console.log("Err catch :", err);
@@ -149,25 +154,71 @@ mdLinks.callGetLinks= (route)=> {
 //4-Declaring Promise ArrayHref with Module Fetch: se incluye in CallGetLinks.
 mdLinks.arrayHref = (array) => {
 
-  array.forEach(element => {
+  array.map(element => {
   return new Promise((resolve,reject)=> {
     fetch.fetchUrl(element.href,(error, meta, body)=> {
         if(meta) {
           resolve(meta.status);
         }else {
+          console.log("error status")
           reject(error);
         }
     })
 })  
     .then((res) => {
      console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
+      if (res===200) {
+        element.status = res;
+        element.response = "Ok 200";
+        console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
+      //   // resolve(element);
+      } 
+    // else {
+    //     // console.log("error status")
+    //     element.status = res;
+    //     element.response = res.text;
+    //     // resolve(element); 
+        
+    // }
     })
     .catch(err => {
-    console.log(err);
+      console.log(err);
+        // if(err){
+        // element.status = null;
+        // element.response = "fail"
+        // resolve(element);
+        // console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
+        // console.log(err);
+      // }
     })  
 });
 }
 
+// mdLinks.arrayValidate = (array) => {
+//   array.map(element => {
+//     return new Promise((resolve,reject)=> {
+//       fetch.fetchUrl(element.href)
+//       .then(res => {
+//         if (res.status===404) {
+//           element.status = res.status;
+//           element.response = "fail";
+//           resolve(element);
+//         } else {
+//           element.status = res.status;
+//           element.response = res.statusText;
+//           resolve(element); 
+//         }
+//       })
+//       .catch(err => {
+//         if(err){
+//           element.status = null;
+//           element.response = "fail"
+//           resolve(element);
+//         }
+//       })
+//     })
+//   })
+// }
 
 module.exports= mdLinks;
 
