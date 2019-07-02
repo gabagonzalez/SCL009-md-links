@@ -13,19 +13,18 @@ let mdLinks = {};// *** 0 ***
 
 //C-MODULE IMPORT TO INDEX.JS:
 mdLinks.mdLinks = (route,options) => {
-  if(options === '--validate' || options ==='--validate --stats'){ 
-    let options = {};
-    return options.validate = true;
-  }
-  else if(options==='--stats' || options ==='--stats --validate '){ 
-    let options = {};
-    return options.validate = true;
-  }
- 
-  let pathExecute =  mdLinks.pathConvertAbsolute(route);
-  mdLinks.callFileOrDirectory(pathExecute);
 
-}
+  let pathExecute =  mdLinks.pathConvertAbsolute(route);
+  
+  mdLinks.callFileOrDirectory(pathExecute);
+ }
+
+ //1-Function Options|
+ mdLinks.options = 
+ // if (options ===' ' ){
+  //   mdLinks.callFileOrDirectory(pathExecute);
+  // }
+
 
 //***FUNCTION FOR CONECT***
 //1-Function from relative a absolute with Module Path: **Normalizar y resolver *** 
@@ -134,10 +133,10 @@ return new Promise((resolve,reject)=>{
 
           }
     })  
-})
+ })
 }
 
-//3b-Call Promise getLinks.
+// 3b-Call Promise getLinks.
 mdLinks.callGetLinks= (route)=> {
     mdLinks.getLinks(route)
     .then(res=> {
@@ -166,7 +165,7 @@ mdLinks.arrayHref = (array) => {
     })
 })  
     .then((res) => {
-     console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
+     console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
       if (res===200) {
         element.status = res;
         element.response = "Ok 200";
