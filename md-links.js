@@ -9,18 +9,42 @@ const fetch = require("fetch");
 const chalk = require('chalk');
 
 //B-Declaraton of the Variables
-let mdLinks = {};// *** 0 ***
+let mdLinks = {};
 
 //C-MODULE IMPORT TO INDEX.JS:
 mdLinks.mdLinks = (route,options) => {
 
   let pathExecute =  mdLinks.pathConvertAbsolute(route);
-  
+
+  // console.log("yaa path in console : " + pathInConsole); console.log("yaa options : " + options);
+  // return new Promise((resolve, reject) => {
+
+  //     options.validate = false;
+  //     options.stats = false;
+  //     let pathAbsolute = path.resolve(pathInConsole);
+
+  //     mdLinks.promiseFileOrDirectory(pathAbsolute)
+  //         .then(salida => {
+  //             let trueOrFalseIsFile = salida.isFile();
+  //             let trueOrFalseDirectory = salida.isDirectory();
+  //             console.log(" salida.isFile(); " + trueOrFalseIsFile); console.log(" salida.isFile(); " + trueOrFalseDirectory);
+
+  //             if (trueOrFalseDirectory) {
+  //                 mdLinks.mdGetFromDirectory(pathInConsole);
+  //             } else if (trueOrFalseIsFile) {
+  //                 mdLinks.callGetLink(pathInConsole);
+  //             }
+  //         })
+  //         .catch(err => { console.log(err); })
+
+
+
+
   mdLinks.callFileOrDirectory(pathExecute);
- }
+}
 
  //1-Function Options|
- mdLinks.options = 
+//  mdLinks.options = 
  // if (options ===' ' ){
   //   mdLinks.callFileOrDirectory(pathExecute);
   // }
@@ -79,7 +103,7 @@ mdLinks.callFileOrDirectory = (route) => {
   .catch( err => { console.log(err); } )
 }
 
-//2-Declaring Promise getFromDirectory with FileHound/Promise All: Read the directory to extract the "md" files
+//2-Declaring Promise getFromDirectory with FileHound/Promise All: Read the directory to extract the "md" files and extract links with callGetLinks.
 mdLinks.getFromDirectory = (route) => {
   return new Promise((resolve,reject)=>{
     fs.readdir(route, 'utf-8', function(err, files) {
@@ -166,19 +190,21 @@ mdLinks.arrayHref = (array) => {
 })  
     .then((res) => {
      console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
-      if (res===200) {
+      if (res == 200) {
         element.status = res;
         element.response = "Ok 200";
         console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
       //   // resolve(element);
-      } 
-    // else {
+      }else {
+        element.status = res;
+        element.response = "Fail 404";
+        console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
     //     // console.log("error status")
     //     element.status = res;
     //     element.response = res.text;
     //     // resolve(element); 
         
-    // }
+    }
     })
     .catch(err => {
       console.log(err);
