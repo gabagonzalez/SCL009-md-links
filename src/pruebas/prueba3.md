@@ -4,5 +4,7 @@
 
 ### Tutoriales / NodeSchool workshoppers
 
-- [learnyounode](https://github.com/workshopper/learnyounode)
-- [how-to-npm](https://github.com/workshopper/how-to-npm)
+- [laszlito] (https://laszlito.com/404)
+- [lego] (https://www.lego.com/notfound)
+
+

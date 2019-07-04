@@ -4,4 +4,6 @@
 
 ### Tutoriales / NodeSchool workshoppers
 
-- [promise-it-wont-hurt](https://github.com/stevekane/promise-it-wont-hurt)
+
+- [how-to-npm]
+- [promise-it-wont-hurt]
