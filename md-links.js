@@ -34,10 +34,10 @@ mdLinks.isFileOrDirectory = (element) => {
 //D-MODULE IMPORT TO INDEX.JS:
 mdLinks.mdLinks = (route,options) => {
   let pathExecute =  mdLinks.pathConvertAbsolute(route);
-  let promise = Promise.resolve(mdLinks.getLinks(pathExecute));
+  let promise = Promise.resolve(mdLinks.callGetLinks(pathExecute));
   promise
   .then(res => {
-    console.log(res);
+    // console.log(res);
   })
 
   // let otherPromise = new Promise((resolve, reject) => {
@@ -116,10 +116,10 @@ mdLinks.getLinks = (route) => {
 mdLinks.callGetLinks= (route)=> {
       mdLinks.getLinks(route)
       .then(res=> {
-        let linkString = JSON.stringify(res);
-        // console.log(linkString);
-        console.log( chalk.green(linkString.route)+ " "+ chalk.cyan(linkString.href) +"  "+ chalk.blue.bgBlack(linkString.text));
-        // mdLinks.arrayHref(res);
+        // let linkString = JSON.stringify(res);
+        // // console.log(linkString);
+        // console.log( chalk.green(linkString.route)+ " "+ chalk.cyan(linkString.href) +"  "+ chalk.blue.bgBlack(linkString.text));
+        mdLinks.arrayHref(res);
         // mdLinks.arrayValidate(res);
        })
     .catch(err=> {
@@ -157,21 +157,21 @@ mdLinks.getFromDirectory = (route) => {
 }
 
 //4-Declaring Promise ArrayHref with Module Fetch: se incluye in CallGetLinks.
-// mdLinks.arrayHref = (array) => {
+mdLinks.arrayHref = (array) => {
 
-//   array.map(element => {
-//   return new Promise((resolve,reject)=> {
-//     fetch.fetchUrl(element.href,(error, meta, body)=> {
-//         if(meta) {
-//           resolve(meta.status);
-//         }else {
-//           console.log("error status")
-//           reject(error);
-//         }
-//     })
-// })  
-//     .then((res) => {
-//      console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
+  array.map(element => {
+  return new Promise((resolve,reject)=> {
+    fetch.fetchUrl(element.href,(error, meta, body)=> {
+        if(meta) {
+          resolve(meta.status);
+        }else {
+          console.log("error status")
+          reject(error);
+        }
+    })
+})  
+    .then((res) => {
+     console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
 //       // if (res == 200) {
 //       //   element.status = res;
 //       //   element.response = "Ok 200";
@@ -187,7 +187,7 @@ mdLinks.getFromDirectory = (route) => {
 //     //     // resolve(element); 
         
 //     // }
-//     })
+    })
 //     .catch(err => {
 //       console.log(err);
 //         // if(err){
@@ -197,9 +197,9 @@ mdLinks.getFromDirectory = (route) => {
 //         // console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
 //         // console.log(err);
 //       // }
-//     })  
-// });
-// }
+    // })  
+});
+}
 
 module.exports= mdLinks;
 
