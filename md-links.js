@@ -37,7 +37,7 @@ mdLinks.mdLinks = (route,options) => {
   let promise = Promise.resolve(mdLinks.callGetLinks(pathExecute));
   promise
   .then(res => {
-    // console.log(res);
+  // console.log(res);
   })
 
   // let otherPromise = new Promise((resolve, reject) => {
@@ -106,6 +106,7 @@ mdLinks.getLinks = (route) => {
               }
               marked(data,{renderer:renderer});
               resolve(links);
+              console.log(links);
   
             }
       })  
@@ -117,8 +118,7 @@ mdLinks.callGetLinks= (route)=> {
       mdLinks.getLinks(route)
       .then(res=> {
         // let linkString = JSON.stringify(res);
-        // // console.log(linkString);
-        // console.log( chalk.green(linkString.route)+ " "+ chalk.cyan(linkString.href) +"  "+ chalk.blue.bgBlack(linkString.text));
+        // console.log(linkString);
         mdLinks.arrayHref(res);
         // mdLinks.arrayValidate(res);
        })
@@ -158,19 +158,22 @@ mdLinks.getFromDirectory = (route) => {
 
 //4-Declaring Promise ArrayHref with Module Fetch: se incluye in CallGetLinks.
 mdLinks.arrayHref = (array) => {
-
-  array.map(element => {
+  // console.log(array);
+  array.forEach(element => {
   return new Promise((resolve,reject)=> {
     fetch.fetchUrl(element.href,(error, meta, body)=> {
+      // console.log(element.href);
         if(meta) {
+          // console.log(meta);
           resolve(meta.status);
         }else {
-          console.log("error status")
+          console.log("error al obtener status")
           reject(error);
         }
     })
 })  
     .then((res) => {
+      // console.log(res);
      console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
 //       // if (res == 200) {
 //       //   element.status = res;
