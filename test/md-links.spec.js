@@ -11,9 +11,12 @@ const mdLinks = require ('../md-links.js');
   //   .toEqual([{"href": "http://github.com/workshopper/learnyounode", "route": "C:\\Users\\Isa y Henry\\Documents\\Gaba\\Laboratoria\\SCL009-md-links\\prueba.md", "text": "archivo de prueba"}]);
   //   });
   it('Deberia retornarme 1 link del archivo prueba.md', () => {
-    expect.assertions(1);
-    expect(mdLinks.getLinks('\Users\Isa y Henry\Documents\Gaba\Laboratoria\SCL009-md-links\prueba.md'))
-      .toEqual([{"route":"C:\\Users\\Isa y Henry\\Documents\\Gaba\\Laboratoria\\SCL009-md-links\\prueba.md","text":"archivo de prueba","href":"http://github.com/workshopper/learnyounode"}])
+    expect.assertions(0);
+    expect(mdLinks.getLinks('/home/laboratoriad172/Documentos/GGonzalez/SCL009-md-links/prueba.md"'))
+    
+      resolves.toEqual([ { route: '/home/laboratoriad172/Documentos/GGonzalez/SCL009-md-links/prueba.md',
+      text: 'archivo de prueba',
+      href: 'http://github.com/workshopper/learnyounode' } ])
     
   });
 
