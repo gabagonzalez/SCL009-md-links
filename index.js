@@ -5,78 +5,77 @@
 // if(main.require === module ) {
 // }
 
-//1***Declaration Modules/libraries/Constante
-// Importando funcion mdLinks desde md-links.js
+//A-Declaration Modules/libraries/Constante //Import function mdLinks(md-links.js)
 const mdLinks = require('../SCL009-md-links/md-links.js'); 
+const chalk = require('chalk');
+const colors = require('colors');
 
-//2***Declaration of the Variables
+//B-Declaration of the Variables for route and options.
 let route = process.argv[2];
-let firsOption = process.argv[3];
-let secondOption = process.argv[4];
-let options = firsOption+ " "+secondOption;
-// console.log(options);
-options.validate = false;
-options.stats = false;
+let options = [process.argv[3],process.argv[4]];
+// options.validate = false;
+// options.stats = false;
 
-// Valores ingresados: seran los parametros de la funcion importada.
+//C-Function CallPromise MDlinks.mdlinks
 executeModuleMdLinks = (route, options) => {
-  if(options === '--validate' || options ==='--v'){ 
-    // let options = {};
-    console.log("con validate");
-    return options.validate = true;
-  }
-  if(options==='--stats' || options ==='--s'){ 
-    // let options = {};
-    console.log("con stats");
-    return options.stats = true;
-  }
-  else if(options ==='--stats --validate ' || options ==='--validate --stats '){
-    // let options = {};
-    console.log("con ambas options");
-    return options = true;
-  }
-  mdLinks.mdLinks(route,options)
-  //   .then(res, option.validate === true) {
-  // aqui los link es res y hacer lo demas con el validate 
-  //   }
-  }
+ 
+  //1 Import Promise MdLinks
+  mdLinks.mdLinks(route, options)
 
-    //-Call Promise run the route to the next action with options
-// executeModuleMdLinks = (route, options) => {
-//   promise
-//   .then(res => {
-//     mdLinks.arrayHref(res);
-//     console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
-//     if(options === 'undefined') { 
-//       // let options = {};
-//       mdLinks.arrayHref(res);
-//       return options = true;
-//     }
-//     if(options === '--validate'|| options === '--v') {
-//       mdLinks.callGetLinks(route)
-//       // console.log("con validate");
-//       return options.validate = true;
-//     }
-//     if (options === '--stats' || options === '--s'){ 
-//       // let options = {};
-//       // console.log("con stats");
-//       return options.stats = true;
-//     }
-//   })
-//   .catch( err => { 
-//     console.log(err); 
-//   })
-// mdLinks.mdLinks(route,options)
-// }
+  //2-Call to Promise GetFromFile.
+  mdLinks.callFromFile= (route)=> {
+    mdLinks.getFromFile(route)
+    .then(res=> {
+
+      //PromiseALl calls promises ValidateLinks and Statslinks.    
+      return Promise.all(res, mdLinks.validateLinks(res))
+      .then(res => {
+        //array
+        let href= res;
+        res.map(element=> {
+          //validate
+          element.status= res;
+          if (res ===!(200)) {
+            res = element.response;
+            element.response = "fail";
+          }
+          else {
+            element.response = "ok, 200";
+          }
+          //stats, total and unique
+          element.total= res.length;
+          let uniqueLink= new Set(href);
+          element.unique = uniqueLink.size;
+          
+          // Finally conditional; Execute the route to the next action by options.
+          let arrayLinks= chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ colors.blue.bgBlack(element.text);
+          let linkValidate= colors.america(element.route)+ " "+ chalk.magenta(element.href) +" "+chalk.yellow.bgBlack(element.response)+" "+ colors.rainbow(element.text);
+          let linkStats= colors.yellow("TOTAL LINKS: "+ element.total)+ " "+ chalk.green("UNIQUE LINKS: "+ element.unique);
+          // let statsSet= [new Set(colors.yellow("TOTAL LINKS: "+ element.total)+ " "+ chalk.green("UNIQUE LINKS: "+ element.unique))];
+          // let stats = linkStats.filter(statsSet);
+          // console.log(stats);
+          // Option: with Validate
+          if (options[0]==="--validate" || options[0]==="--v"){
+            console.log(linkValidate);
+          }
+          // Option: with linkStats
+          if (options[0]==="--stats" || options[0]==="--s"){
+            console.log(linkStats);
+          }
+          // Zero Options
+          else if(options[0]=== undefined){
+            console.log(arrayLinks);
+          }
+          return linkValidate, linkStats, arrayLinks;
+        })
+      })
+    })  
+    .catch(err=> {
+      console.log(chalk.red("OOPPss, Algo salio Mal!, Err catch : " + err));
+    })
+  }  
+}
 
 executeModuleMdLinks(route, options);
 
-// example promise
-// let otherPromise = new Promise((resolve, reject) => {
-  //   setTimeout(() =>resolve(5), 2000);
-  // });
-  // otherPromise
-  // .then(res => {
-  //   res += 5;
-  //   console.log(res);
-  // });
+// mdLinks.callFromFile(route)

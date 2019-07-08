@@ -11,40 +11,35 @@ const chalk = require('chalk');
 //B-Declaraton of the Variables
 let mdLinks = {};
 
-//C-FUNCTION FOR CONECT
-//1-Function from relative a absolute with Module Path: **Normalizar y resolver *** 
+//C-FUNCTIONS TO CONNECT
+// 1-Function from relative a absolute with Module Path: **Resolver *** 
 mdLinks.pathConvertAbsolute = (route) => {
-  let pathConvertAbsolute = path.resolve(route);
-   return pathConvertAbsolute;
- }
-
- // 2-Function Conditional " isFile() " or " isDirectory() " : se incluye in CallFileOrDirectory.
-mdLinks.isFileOrDirectory = (element) => {
-    // entrega booleano true
-    if( element.isFile()){
-      //  console.log(" tu archivo es un **** archivo *** ");
-      return 'file';
-    } else if (element.isDirectory()){
-        // console.log(" tu archivo es un *** Directorio *** ")
-      return 'directory';
-    }
+  if(!path.isAbsolute(route)) {
+    // let routeChange = path.normalize(route)
+    let pathConvertAbsolute = path.resolve(route);
+    return pathConvertAbsolute;
+  }
+}
+ // 2-Conditional Function " isFile() " or " isDirectory() " : se incluye in CallFileOrDirectory.
+ mdLinks.isFileOrDirectory = (element) => {
+  // entrega booleano true
+  if( element.isFile()){
+    //  console.log(" tu archivo es un **** archivo *** ");
+    return 'file';
+  } else if (element.isDirectory()){
+      // console.log(" tu archivo es un *** Directorio *** ")
+    return 'directory';
+  }
 }
 
 //D-MODULE IMPORT TO INDEX.JS:
 mdLinks.mdLinks = (route,options) => {
   let pathExecute =  mdLinks.pathConvertAbsolute(route);
-  let promise = Promise.resolve(mdLinks.callGetLinks(pathExecute));
-  promise
-  .then(res => {
-    console.log(res);
-  })
-  .catch( err => { 
-    console.log(err); 
-  })
-
+  Promise.resolve(mdLinks.callFileOrDirectory(pathExecute));
+  // Promise.resolve(mdLinks.statusLinks(pathExecute,options));
 }
 
-//***DECLARING PROMISES
+//E-DECLARING PROMISES
 //1a-Declaring Promise PromiseFileOrDirectory with Module FileSystem-Stat: return info. of a file.
 mdLinks.promiseFileOrDirectory = (route) => {
 
@@ -52,6 +47,7 @@ mdLinks.promiseFileOrDirectory = (route) => {
      fs.stat(route, (err, salida) => {
          if(err) {
              reject(err);
+             console.log(chalk.red("oops, no hay archivos que ver : "+ err));
          } else {
               resolve(salida);
          }
@@ -59,7 +55,7 @@ mdLinks.promiseFileOrDirectory = (route) => {
   })
 }
 
-//1b-Call PromiseFileOrDirectory: run the route to the next action.
+//b-Call PromiseFileOrDirectory: run the route to the next action.
 mdLinks.callFileOrDirectory = (route) => {
   mdLinks.promiseFileOrDirectory(route)
   .then( salida =>   {
@@ -69,12 +65,12 @@ mdLinks.callFileOrDirectory = (route) => {
       // console.log("siii es directory");
  
     }else if (fileOrDirectory==='file') {
-      mdLinks.callGetLinks(route)
+      mdLinks.callFromFile(route)
       // console.log("sii es file");
       }
     
   })
-  .catch( err => { console.log(err); } )
+  .catch( err => { console.log(chalk.red("no se encuentra tu path, favor inténtalo nuevamente :  "+ err)); } )
 }
 
 //2-Declaring Promise getFromDirectory with FileHound/Promise All: Read the directory to extract the "md" files and extract links with callGetLinks.
@@ -82,7 +78,8 @@ mdLinks.getFromDirectory = (route) => {
   return new Promise((resolve,reject)=>{
     fs.readdir(route, 'utf-8', function(err, files) {
       if(err) {
-        reject(err);
+        reject( err);
+        console.log(chalk.red("oops, no hay archivos que leer"+ err));
       }else {
         resolve(files);
         files = fileHound.create()
@@ -94,12 +91,12 @@ mdLinks.getFromDirectory = (route) => {
           Promise.all(res)
           .then (res => {
               res.map(e=>{
-              return mdLinks.callGetLinks(e);
+              return mdLinks.callFromFile(e);
             })
           })
         })
         .catch((err) => {
-          console.log(err)
+          console.log(chalk.red("oops, no hay archivos extension md"+ err));
         })
       }
     })
@@ -107,96 +104,82 @@ mdLinks.getFromDirectory = (route) => {
 }
 
 //3a-Declaring Promise GetLinks with Module Marked: Read file to extract liks.
-mdLinks.getLinks = (route) => {
- 
+mdLinks.getFromFile = (route) => {
   return new Promise((resolve,reject)=>{
-      fs.readFile(route, 'utf-8', function(err, data) {   
-          if(err) {
-              reject(err);
-              console.log("Error al leer la ruta")
-          }
-          else {
-              let links=[];
-              const renderer = new marked.Renderer();
-              renderer.link = function(href, title, text){
-                  links.push({
-                    route: route,
-                    text: text,
-                    href: href 
-                    //   title:title
-                  })
-              }
-              marked(data,{renderer:renderer});
-              resolve(links);
-              console.log(links);
-  
-            }
-      })  
-   })
-  }
-  
-//3b-Call Promise getLinks.
-mdLinks.callGetLinks= (route)=> {
-      mdLinks.getLinks(route)
-      .then(res=> {
-        // let linkString = JSON.stringify(res);
-        // console.log(linkString);
-        
-        // mdLinks.arrayHref(res);
-        console.log(res);
-       })
-    .catch(err=> {
-      console.log("Err catch :", err);
-    })
-  }
-
-//4-Declaring Promise ArrayHref with Module Fetch: se incluye in CallGetLinks.
-mdLinks.arrayHref = (array) => {
-  console.log(array);
-  array.forEach(element => {
-    // console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
-  return new Promise((resolve,reject)=> {
-    fetch.fetchUrl(element.href,(error, meta, body)=> {
-      // console.log(element.href);
-        if(meta) {
-          // console.log(meta);
-          resolve(meta.status);
-        }else {
-          console.log("error al obtener status")
-          reject(error);
+    fs.readFile(route, 'utf-8', function(err, data) {   
+      if(err) {
+        reject(err);
+        console.log(chalk.red("oops, no hay archivos que leer"+ err));
+      }
+      else {
+        let links=[];
+        const renderer = new marked.Renderer();
+        renderer.link = function(href, title, text){
+          links.push({
+            route: route,
+            text: text,
+            href: href,
+            //title:title
+          })
         }
+        marked(data,{renderer:renderer});
+        resolve(links);
+        console.log(links);  
+          
+      }
     })
   })
-})
-    .then((res) => {
-      console.log(res);
-    //  console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
-      // if (res == 200) {
-      //   element.status = res;
-      //   element.response = "Ok 200";
-      //   console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
-      // //   // resolve(element);
-      // }else {
-      //   element.status = res;
-      //   element.response = "Fail 404";
-      //   console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
-    //     // console.log("error status")
-    //     element.status = res;
-    //     element.response = res.text;
-    //     // resolve(element); 
-        
-    // }
-    })
-    .catch(err => {
-      console.log(err);
-        // if(err){
-        // element.status = null;
-        // element.response = "fail"
-        // resolve(element);
-        // console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
-        // console.log(err);
-      // }
-    })
 }
+
+//4-Declaring PromiseAll statusLinks with Module Fetch: se incluye in CallGetLinks.
+mdLinks.validateLinks = (array)=> {
+  array.forEach(element => {
+    return new Promise((resolve,reject)=> {
+      fetch.fetchUrl(element.href,(error, meta, body)=> {
+        if(meta) {
+          resolve(meta.status);
+          // console.log(meta.status);
+        }
+        else {
+          reject(error);
+          console.log(chalk.red("OOPPs, error al ver status link"+ err));
+        }
+      })
+    })
+  })
+
+
+// mdLinks.callStatusLinks= (route) => {
+  // mdLinks.statusLinks(route)
+  // .then((res) => {
+  //   //  console.log(res);
+  //   //  console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
+  //   if (res == 200) {
+  //     element.status = res;
+  //     element.response = "Ok 200";
+  //     console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
+  //     resolve(element);
+  //   }
+  //   else {
+  //     element.status = res;
+  //     element.response = "Fail 404";
+  //     console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
+  //     // console.log("error status")
+  //     element.status = res;
+  //     element.response = res.text;
+  //     resolve(element);   
+  //   }
+  // })
+  // .catch(err => {
+  //   // console.log(err);
+  //   if(err) {
+  //     element.status = null;
+  //     element.response = "fail"
+  //     resolve(element);
+  //     console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
+  //   }
+  // })
+}
+
 
 module.exports = mdLinks;

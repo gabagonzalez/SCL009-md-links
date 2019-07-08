@@ -1,7 +1,7 @@
 const mdLinks = require ('../md-links.js');
 
 // works with promises and use `toEqual`
-// describe('mdLinks', () => {
+describe('mdLinks', () => {
   // it('Deberia retornarme 1 link encontrado en el archivo prueba.md', async() => {
   //   await expect(mdLinks.callGetLinks('\prueba.md'))
   //   .toEqual([{"href": "http://github.com/workshopper/learnyounode", "route": "C:\\Users\\Isa y Henry\\Documents\\Gaba\\Laboratoria\\SCL009-md-links\\prueba.md", "text": "archivo de prueba"}]);
@@ -10,13 +10,10 @@ const mdLinks = require ('../md-links.js');
   //   expect(mdLinks.callGetLinks('\prueba.md'))
   //   .toEqual([{"href": "http://github.com/workshopper/learnyounode", "route": "C:\\Users\\Isa y Henry\\Documents\\Gaba\\Laboratoria\\SCL009-md-links\\prueba.md", "text": "archivo de prueba"}]);
   //   });
-  it('Deberia retornarme 1 link del archivo prueba.md', () => {
-    expect.assertions(0);
-    expect(mdLinks.getLinks('/home/laboratoriad172/Documentos/GGonzalez/SCL009-md-links/prueba.md"'))
-    
-      resolves.toEqual([ { route: '/home/laboratoriad172/Documentos/GGonzalez/SCL009-md-links/prueba.md',
-      text: 'archivo de prueba',
-      href: 'http://github.com/workshopper/learnyounode' } ])
+  it('Deberia retornarme 1 link del archivo prueba.md', async () => {
+    // expect.assertions(1);
+    await expect(mdLinks.mdLinks('..\prueba.md'))
+    .toEqual("C:UsersIsa y HenryDocumentsGabaLaboratoriaSCL009-md-linksprueba.md, ,http://github.com/workshopper/learnyounode,  ,archivo de prueba")
     
   });
 
@@ -39,4 +36,4 @@ const mdLinks = require ('../md-links.js');
 //     text: 'archivo de prueba',
 //     href: 'http://github.com/workshopper/learnyounode' } ] )
 // });
-// });
+});
