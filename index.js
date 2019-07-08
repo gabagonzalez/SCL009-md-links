@@ -51,9 +51,7 @@ executeModuleMdLinks = (route, options) => {
           let arrayLinks= chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ colors.blue.bgBlack(element.text);
           let linkValidate= colors.america(element.route)+ " "+ chalk.magenta(element.href) +" "+chalk.yellow.bgBlack(element.response)+" "+ colors.rainbow(element.text);
           let linkStats= colors.yellow("TOTAL LINKS: "+ element.total)+ " "+ chalk.green("UNIQUE LINKS: "+ element.unique);
-          // let statsSet= [new Set(colors.yellow("TOTAL LINKS: "+ element.total)+ " "+ chalk.green("UNIQUE LINKS: "+ element.unique))];
-          // let stats = linkStats.filter(statsSet);
-          // console.log(stats);
+         
           // Option: with Validate
           if (options[0]==="--validate" || options[0]==="--v"){
             console.log(linkValidate);
@@ -78,4 +76,3 @@ executeModuleMdLinks = (route, options) => {
 
 executeModuleMdLinks(route, options);
 
-// mdLinks.callFromFile(route)

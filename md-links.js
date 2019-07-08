@@ -147,38 +147,7 @@ mdLinks.validateLinks = (array)=> {
       })
     })
   })
-
-
-// mdLinks.callStatusLinks= (route) => {
-  // mdLinks.statusLinks(route)
-  // .then((res) => {
-  //   //  console.log(res);
-  //   //  console.log( chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ chalk.blue.bgBlack(element.text));
-  //   if (res == 200) {
-  //     element.status = res;
-  //     element.response = "Ok 200";
-  //     console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
-  //     resolve(element);
-  //   }
-  //   else {
-  //     element.status = res;
-  //     element.response = "Fail 404";
-  //     console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
-  //     // console.log("error status")
-  //     element.status = res;
-  //     element.response = res.text;
-  //     resolve(element);   
-  //   }
-  // })
-  // .catch(err => {
-  //   // console.log(err);
-  //   if(err) {
-  //     element.status = null;
-  //     element.response = "fail"
-  //     resolve(element);
-  //     console.log( chalk.green(element.route)+ " "+chalk.cyan(element.href) +"  "+chalk.yellow.bgBlack(element.response)+"  "+ chalk.blue.bgBlack(element.text));
-  //   }
-  // })
+  
 }
 
 
