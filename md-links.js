@@ -14,9 +14,13 @@ let mdLinks = {};
 //C-FUNCTIONS TO CONNECT
 // 1-Function from relative a absolute with Module Path: **Resolver *** 
 mdLinks.pathConvertAbsolute = (route) => {
+  console.log(route);
   if(!path.isAbsolute(route)) {
     // let routeChange = path.normalize(route)
     let pathConvertAbsolute = path.resolve(route);
+    let nuevo = path.join(pathConvertAbsolute);
+    console.log(nuevo);
+    console.log(pathConvertAbsolute);
     return pathConvertAbsolute;
   }
 }
@@ -124,7 +128,7 @@ mdLinks.getFromFile = (route) => {
         }
         marked(data,{renderer:renderer});
         resolve(links);
-        console.log(links);  
+        // console.log(links);  
           
       }
     })
@@ -142,7 +146,7 @@ mdLinks.validateLinks = (array)=> {
         }
         else {
           reject(error);
-          console.log(chalk.red("OOPPs, error al ver status link"+ err));
+          console.log(chalk.red("OOPPs, error al ver status link"+ error));
         }
       })
     })
