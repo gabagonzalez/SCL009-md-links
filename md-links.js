@@ -6,84 +6,70 @@ const path = require('path');
 const fileHound = require('filehound');
 const marked = require("marked");
 const fetch = require("fetch");
-const chalk = require('chalk');
+const colors = require('colors');
 
 //B-Declaraton of the Variables
 let mdLinks = {};
 
-//C-FUNCTIONS TO CONNECT
-// 1-Function from relative a absolute with Module Path: **Resolver *** 
+//C-Function from relative a absolute with Module Path: **Resolver *** 
 mdLinks.pathConvertAbsolute = (route) => {
-  console.log(route);
   if(!path.isAbsolute(route)) {
-    // let routeChange = path.normalize(route)
     let pathConvertAbsolute = path.resolve(route);
-    let nuevo = path.join(pathConvertAbsolute);
-    console.log(nuevo);
-    console.log(pathConvertAbsolute);
     return pathConvertAbsolute;
   }
+  
 }
- // 2-Conditional Function " isFile() " or " isDirectory() " : se incluye in CallFileOrDirectory.
- mdLinks.isFileOrDirectory = (element) => {
-  // entrega booleano true
-  if( element.isFile()){
-    //  console.log(" tu archivo es un **** archivo *** ");
-    return 'file';
-  } else if (element.isDirectory()){
-      // console.log(" tu archivo es un *** Directorio *** ")
-    return 'directory';
-  }
-}
-
 //D-MODULE IMPORT TO INDEX.JS:
 mdLinks.mdLinks = (route,options) => {
   let pathExecute =  mdLinks.pathConvertAbsolute(route);
   Promise.resolve(mdLinks.callFileOrDirectory(pathExecute));
-  // Promise.resolve(mdLinks.statusLinks(pathExecute,options));
 }
 
 //E-DECLARING PROMISES
-//1a-Declaring Promise PromiseFileOrDirectory with Module FileSystem-Stat: return info. of a file.
+//1a-PromiseFileOrDirectory with Module FileSystem-Stat: return info. of a file.
 mdLinks.promiseFileOrDirectory = (route) => {
-
  return new Promise ((resolve, reject) => {
      fs.stat(route, (err, salida) => {
          if(err) {
-             reject(err);
-             console.log(chalk.red("oops, no hay archivos que ver : "+ err));
+          reject(err);
+          return err;
+
          } else {
-              resolve(salida);
+          resolve(salida);
+          let data = salida;
+          return data;   
          }
      })
   })
 }
 
-//b-Call PromiseFileOrDirectory: run the route to the next action.
+//1b-Call PromiseFileOrDirectory: run the route to the next action.
 mdLinks.callFileOrDirectory = (route) => {
   mdLinks.promiseFileOrDirectory(route)
   .then( salida =>   {
-    let fileOrDirectory = mdLinks.isFileOrDirectory(salida);
-    if(fileOrDirectory==='directory'){
-      mdLinks.getFromDirectory(route)
-      // console.log("siii es directory");
- 
-    }else if (fileOrDirectory==='file') {
+    let data = salida;
+    if (data.isFile()) {
+      let result = data.isFile;
       mdLinks.callFromFile(route)
-      // console.log("sii es file");
-      }
-    
+    }
+    else if (data.isDirectory()) {
+      let result = data.isDirectory;
+      mdLinks.getFromDirectory(route)
+    }
+    return result;  
   })
-  .catch( err => { console.log(chalk.red("no se encuentra tu path, favor inténtalo nuevamente :  "+ err)); } )
+  .catch( err => { 
+    return err;
+  })
 }
 
-//2-Declaring Promise getFromDirectory with FileHound/Promise All: Read the directory to extract the "md" files and extract links with callGetLinks.
+
+//2-Promise getFromDirectory with FileHound-Module: Read the directory to extract the "md" files.
 mdLinks.getFromDirectory = (route) => {
   return new Promise((resolve,reject)=>{
     fs.readdir(route, 'utf-8', function(err, files) {
       if(err) {
         reject( err);
-        console.log(chalk.red("oops, no hay archivos que leer"+ err));
       }else {
         resolve(files);
         files = fileHound.create()
@@ -100,20 +86,19 @@ mdLinks.getFromDirectory = (route) => {
           })
         })
         .catch((err) => {
-          console.log(chalk.red("oops, no hay archivos extension md"+ err));
+          return err;
         })
       }
     })
   })
 }
 
-//3a-Declaring Promise GetLinks with Module Marked: Read file to extract liks.
+//3-Promise getLinks with Marked-Module: Read file to extract links.
 mdLinks.getFromFile = (route) => {
   return new Promise((resolve,reject)=>{
     fs.readFile(route, 'utf-8', function(err, data) {   
       if(err) {
         reject(err);
-        console.log(chalk.red("oops, no hay archivos que leer"+ err));
       }
       else {
         let links=[];
@@ -122,31 +107,26 @@ mdLinks.getFromFile = (route) => {
           links.push({
             route: route,
             text: text,
-            href: href,
-            //title:title
+            href: href
           })
         }
         marked(data,{renderer:renderer});
         resolve(links);
-        // console.log(links);  
-          
       }
     })
   })
 }
 
-//4-Declaring PromiseAll statusLinks with Module Fetch: se incluye in CallGetLinks.
+//4-Promise validateLinks with Fetch-Module: next CallGetLinks.
 mdLinks.validateLinks = (array)=> {
   array.forEach(element => {
     return new Promise((resolve,reject)=> {
       fetch.fetchUrl(element.href,(error, meta, body)=> {
         if(meta) {
           resolve(meta.status);
-          // console.log(meta.status);
         }
         else {
           reject(error);
-          console.log(chalk.red("OOPPs, error al ver status link"+ error));
         }
       })
     })

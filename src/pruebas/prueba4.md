@@ -1,7 +1,0 @@
-#Archivo de Prueba
-
-## Markdown Links
-
-### Tutoriales / NodeSchool workshoppers
-
-- [promise-it-wont-hurt](https://github.com/stevekane/promise-it-wont-hurt)

@@ -3,56 +3,55 @@
 
 //A-Declaration Modules/libraries/Constante //Import function mdLinks(md-links.js)
 const mdLinks = require('../SCL009-md-links/md-links.js'); 
-const chalk = require('chalk');
 const colors = require('colors');
 
 //B-Declaration of the Variables for route and options.
 let route = process.argv[2];
 let options = [process.argv[3],process.argv[4]];
 
-//C-Function CallPromise MDlinks.mdlinks
-//Si es module or ejecutable
+//C-Function CallPromise MDlinks.mdlinks (module or ejecutable)
 if(require.main === module ) {
+
   executeModuleMdLinks = (route, options) => {
- 
-  //1 Import Promise MdLinks
+    //1 Import Promise MdLinks
     mdLinks.mdLinks(route, options)
 
-  //2-Call to Promise GetFromFile.
+    //2-CallGetFromFile.
     mdLinks.callFromFile= (route)=> {
       mdLinks.getFromFile(route)
       .then(res=> {
-
-      //PromiseALl calls promises ValidateLinks and Statslinks.    
+      
+        //PromiseALl Links/ValidateLinks/StatsLinks.    
         return Promise.all(res, mdLinks.validateLinks(res))
         .then(res => {
-          //array
+          //ArrayLinks
           let href= res;
           res.map(element=> {
-            //validate
+            //Validate
             element.status= res;
-            if (res ===!(200)) {
+            console.log(res);
+            if (res ===!200) {
               res = element.response;
               element.response = "fail";
             }
             else {
               element.response = "ok, 200";
             }
-            //stats, total and unique
+            //Stats: Total and Unique
             element.total= res.length;
             let uniqueLink= new Set(href);
             element.unique = uniqueLink.size;
           
-            // Finally conditional; Execute the route to the next action by options.
-            let arrayLinks= chalk.green(element.route)+ " "+ chalk.cyan(element.href) +"  "+ colors.blue.bgBlack(element.text);
-            let linkValidate= colors.america(element.route)+ " "+ chalk.magenta(element.href) +" "+chalk.yellow.bgBlack(element.response)+" "+ colors.rainbow(element.text);
-            let linkStats= colors.yellow("TOTAL LINKS: "+ element.total)+ " "+ chalk.green("UNIQUE LINKS: "+ element.unique);
+            // Finally Conditional; Execute the route to the next action by options.
+            let arrayLinks= colors.green(element.route)+ " "+ colors.cyan(element.href) +"  "+ colors.blue.bgBlack(element.text);
+            let linkValidate= colors.cyan(element.route)+ " "+ colors.magenta(element.href) +" "+colors.yellow.bgBlack(element.response)+" "+ colors.rainbow(element.text);
+            let linkStats= colors.yellow("TOTAL LINKS: "+ element.total)+ " "+ colors.green("UNIQUE LINKS: "+ element.unique);
          
             // Option: with Validate
             if (options[0]==="--validate" || options[0]==="--v"){
               console.log(linkValidate);
             }
-            // Option: with linkStats
+            // Option: with Stats
             if (options[0]==="--stats" || options[0]==="--s"){
               console.log(linkStats);
             }
@@ -65,7 +64,8 @@ if(require.main === module ) {
         })
       })  
       .catch(err=> {
-        console.log(chalk.red("OOPPss, Algo salio Mal!, Err catch : " + err));
+        console.log(colors.red("OOPPss, Algo salio Mal!, Err catch : " + err));
+        return err;
       })
     }  
   }
